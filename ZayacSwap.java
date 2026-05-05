@@ -9,6 +9,7 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 public class SwapModClient implements ClientModInitializer {
@@ -46,7 +47,10 @@ public class SwapModClient implements ClientModInitializer {
     }
 
     private void performSmartSwap(MinecraftClient client) {
-        if (client.player == null || client.interactionManager == null) return;
+        if (client.player == null || client.interactionManager == null) {
+            sendMessage(client, "Помилка: немає доступу до гравця або менеджера взаємодії", 0xFF0000);
+            return;
+        }
 
         PlayerInventory inv = client.player.getInventory();
         int sourceIndex = -1;
@@ -64,11 +68,19 @@ public class SwapModClient implements ClientModInitializer {
             }
         }
 
-        if (sourceIndex != -1 && targetIndex != -1) {
-            int slotSource = sourceIndex < 9 ? sourceIndex + 36 : sourceIndex;
-            int slotTarget = targetIndex < 9 ? targetIndex + 36 : targetIndex;
+        if (sourceIndex == -1) {
+            sendMessage(client, "Помилка: не знайдено предмет '" + sourceItem + "'", 0xFF0000);
+            return;
+        }
+        if (targetIndex == -1) {
+            sendMessage(client, "Помилка: не знайдено предмет '" + targetItem + "'", 0xFF0000);
+            return;
+        }
 
-            // міняємо місцями
+        int slotSource = sourceIndex < 9 ? sourceIndex + 36 : sourceIndex;
+        int slotTarget = targetIndex < 9 ? targetIndex + 36 : targetIndex;
+
+        try {
             client.interactionManager.clickSlot(
                 client.player.currentScreenHandler.syncId,
                 slotSource,
@@ -76,6 +88,15 @@ public class SwapModClient implements ClientModInitializer {
                 SlotActionType.SWAP,
                 client.player
             );
+            sendMessage(client, "Свап успішно!", 0x00FF00);
+        } catch (Exception e) {
+            sendMessage(client, "Помилка свапу: " + e.getMessage(), 0xFF0000);
+        }
+    }
+
+    private void sendMessage(MinecraftClient client, String message, int color) {
+        if (client.player != null) {
+            client.player.sendMessage(Text.literal(message).styled(style -> style.withColor(color)), false);
         }
     }
 }
