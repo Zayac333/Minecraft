@@ -5,50 +5,106 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SwapConfigScreen extends Screen {
     private final Screen parent;
 
+    private final List<ButtonWidget> sourceButtons = new ArrayList<>();
+    private final List<ButtonWidget> targetButtons = new ArrayList<>();
+
+    // заголовки секцій
+    private ButtonWidget sourceTitle;
+    private ButtonWidget targetTitle;
+
     public SwapConfigScreen(Screen parent) {
-        super(Text.literal("SwapMod Config"));
+        super(Text.literal("AutoSwap"));
         this.parent = parent;
     }
 
     @Override
     protected void init() {
-        // Кнопка вибору джерела
-        this.addDrawableChild(ButtonWidget.builder(Text.literal("Джерело: " + SwapModClient.sourceItem), button -> {
-            if (SwapModClient.sourceItem.equals("TALISMAN")) {
-                SwapModClient.sourceItem = "SPHERE";
-            } else if (SwapModClient.sourceItem.equals("SPHERE")) {
-                SwapModClient.sourceItem = "TOTEM";
-            } else {
-                SwapModClient.sourceItem = "TALISMAN";
-            }
-            button.setMessage(Text.literal("Джерело: " + SwapModClient.sourceItem));
-        })
-        .dimensions(this.width / 2 - 100, this.height / 2 - 60, 200, 20)
-        .build());
+        int centerX = this.width / 2;
+        int startY = this.height / 2 - 80;
 
-        // Кнопка вибору цілі
-        this.addDrawableChild(ButtonWidget.builder(Text.literal("Ціль: " + SwapModClient.targetItem), button -> {
-            if (SwapModClient.targetItem.equals("TALISMAN")) {
-                SwapModClient.targetItem = "SPHERE";
-            } else if (SwapModClient.targetItem.equals("SPHERE")) {
-                SwapModClient.targetItem = "TOTEM";
-            } else {
-                SwapModClient.targetItem = "TALISMAN";
-            }
-            button.setMessage(Text.literal("Ціль: " + SwapModClient.targetItem));
-        })
-        .dimensions(this.width / 2 - 100, this.height / 2 - 30, 200, 20)
-        .build());
+        // Заголовок секції "Перший предмет"
+        sourceTitle = ButtonWidget.builder(Text.literal("Перший: " + getLabel(SwapModClient.sourceItem)), b -> {})
+            .dimensions(centerX - 220, startY, 200, 20).build();
+        this.addDrawableChild(sourceTitle);
+
+        // Кнопки для вибору першого предмета
+        addSourceButton("TALISMAN", "Талисман", centerX - 220, startY + 30);
+        addSourceButton("SPHERE",   "Сфера",    centerX - 220, startY + 60);
+        addSourceButton("TOTEM",    "Тотем",    centerX - 220, startY + 90);
+        addSourceButton("APPLE",    "Золотое яблоко", centerX - 220, startY + 120);
+        addSourceButton("SHIELD",   "Щит",      centerX - 220, startY + 150);
+
+        // Заголовок секції "Другий предмет"
+        targetTitle = ButtonWidget.builder(Text.literal("Другий: " + getLabel(SwapModClient.targetItem)), b -> {})
+            .dimensions(centerX + 20, startY, 200, 20).build();
+        this.addDrawableChild(targetTitle);
+
+        // Кнопки для вибору другого предмета
+        addTargetButton("TALISMAN", "Талисман", centerX + 20, startY + 30);
+        addTargetButton("SPHERE",   "Сфера",    centerX + 20, startY + 60);
+        addTargetButton("TOTEM",    "Тотем",    centerX + 20, startY + 90);
+        addTargetButton("APPLE",    "Золотое яблоко", centerX + 20, startY + 120);
+        addTargetButton("SHIELD",   "Щит",      centerX + 20, startY + 150);
 
         // Кнопка "Зберегти"
         this.addDrawableChild(ButtonWidget.builder(Text.literal("Зберегти"), button -> {
-            this.client.setScreen(parent); // повертаємось до попереднього екрану
-        })
-        .dimensions(this.width / 2 - 100, this.height / 2, 200, 20)
-        .build());
+            this.client.setScreen(parent);
+        }).dimensions(centerX - 100, this.height - 40, 200, 20).build());
+    }
+
+    private void addSourceButton(String key, String label, int x, int y) {
+        ButtonWidget btn = ButtonWidget.builder(Text.literal(label), button -> {
+            SwapModClient.sourceItem = key;
+            for (ButtonWidget b : sourceButtons) {
+                b.setMessage(Text.literal(b.getMessage().getString().replace("✔ ", "")));
+            }
+            button.setMessage(Text.literal("✔ " + label));
+            sourceTitle.setMessage(Text.literal("Перший: ✔ " + label));
+        }).dimensions(x, y, 200, 20).build();
+
+        sourceButtons.add(btn);
+        this.addDrawableChild(btn);
+
+        if (SwapModClient.sourceItem.equals(key)) {
+            btn.setMessage(Text.literal("✔ " + label));
+            sourceTitle.setMessage(Text.literal("Перший: ✔ " + label));
+        }
+    }
+
+    private void addTargetButton(String key, String label, int x, int y) {
+        ButtonWidget btn = ButtonWidget.builder(Text.literal(label), button -> {
+            SwapModClient.targetItem = key;
+            for (ButtonWidget b : targetButtons) {
+                b.setMessage(Text.literal(b.getMessage().getString().replace("✔ ", "")));
+            }
+            button.setMessage(Text.literal("✔ " + label));
+            targetTitle.setMessage(Text.literal("Другий: ✔ " + label));
+        }).dimensions(x, y, 200, 20).build();
+
+        targetButtons.add(btn);
+        this.addDrawableChild(btn);
+
+        if (SwapModClient.targetItem.equals(key)) {
+            btn.setMessage(Text.literal("✔ " + label));
+            targetTitle.setMessage(Text.literal("Другий: ✔ " + label));
+        }
+    }
+
+    private String getLabel(String key) {
+        switch (key) {
+            case "TALISMAN": return "Талисман";
+            case "SPHERE":   return "Сфера";
+            case "TOTEM":    return "Тотем";
+            case "APPLE":    return "Золотое яблоко";
+            case "SHIELD":   return "Щит";
+            default: return key;
+        }
     }
 
     @Override
