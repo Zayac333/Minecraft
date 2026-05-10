@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "zayacmulti",
+  "version": "${version}",
+  "name": "Zayac Multi Mod",
+  "description": "Клиент под фантайм от Зайчика",
+  "authors": [
+    "Zayac"
+  ],
+  "contact": {
+    "sources": "https://github.com/Zayac333/Minecraft"
+  },
+  "license": "MIT",
+  "icon": "assets/zayacmulti/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.zayachub.zayacmulti.ZayacHubClient"
+    ]
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": ">=0.16.9",
+    "minecraft": "~1.21.4",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
