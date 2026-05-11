@@ -1,0 +1,12 @@
+{
+  "category.zayacmulti.menu": "§6ZayacHub: Menu",
+  "category.zayacmulti.functions": "§bZayacHub: Functions",
+
+  "key.zayacmulti.swap_menu": "AutoSwap Settings",
+  "key.zayacmulti.events_menu": "Event Tracker Settings",
+  "key.zayacmulti.swap_action": "Quick Item Swap",
+  "key.zayacmulti.swap_debug": "Swap Log",
+  "key.zayacmulti.chest_stealer": "Toggle Auto Clicks",
+  "key.zayacmulti.scanner_menu": "Event Scanner Settings",
+  "key.zayacmulti.clan_radar": "Toggle Clan Radar"
+}

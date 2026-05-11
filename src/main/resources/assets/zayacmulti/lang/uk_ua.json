@@ -1,0 +1,12 @@
+{
+  "category.zayacmulti.menu": "§6ZayacHub: Меню",
+  "category.zayacmulti.functions": "§bZayacHub: Функції",
+
+  "key.zayacmulti.swap_menu": "Налаштування AutoSwap",
+  "key.zayacmulti.events_menu": "Налаштування івентів",
+  "key.zayacmulti.swap_action": "Швидкий Свап предметів",
+  "key.zayacmulti.swap_debug": "Лог Свапа",
+  "key.zayacmulti.chest_stealer": "Увімкнути автоматичні кліки",
+  "key.zayacmulti.scanner_menu": "Налаштування сканера івентів",
+  "key.zayacmulti.clan_radar": "Увімкнути радар клану"
+}
